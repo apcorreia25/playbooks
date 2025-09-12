@@ -5,30 +5,29 @@
   tasks:
     - name: Adiciona host com IP passado via variável
       add_host:
-        name: dynamic_host
+        name: host
         ansible_host: "{{ target_ip }}"
         ansible_user: "{{ ssh_user }}"
         ansible_connection: ssh
         ansible_python_interpreter: /usr/bin/python3
         
 - name: Executa healthcheck no host adicionado
-  hosts: dynamic_host
+  hosts: host
   gather_facts: true  
   tasks:
-    - name: Verificar uso de CPU para o Host "{{ ansible_hostname }}" 
+    - name: Verificar uso de CPU no host: {{ ansible_hostname|upper }}
       ansible.builtin.shell: |
         top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}'
       register: cpu_usage
 
-    - name: Verificar uso de memória para o Host "{{ ansible_hostname }}" 
+    - name: Verificar uso de memória no host: {{ ansible_hostname|upper }}
       ansible.builtin.shell: |
         free | grep Mem | awk '{printf("%.2f", $3/$2 * 100.0)}'
       register: memory_usage
 
-    - name: Exibir uso de CPU e memória para o Host "{{ ansible_hostname }}"
+    - name: Exibir uso de CPU e memória no host: {{ ansible_hostname|upper }}
       debug:
-        msg: "Servidor: {{ ansible_hostname }} | CPU: {{ cpu_usage.stdout }}% | Memória: {{ memory_usage.stdout }}%"
-
+        msg: "Servidor: {{ ansible_hostname|upper }} | CPU: {{ cpu_usage.stdout }}% | Memória: {{ memory_usage.stdout }}%"
 
 
 
