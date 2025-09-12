@@ -1,7 +1,19 @@
 ---
 - name: Playbook para healthcheck de uso de CPU e memória em Linux
-  hosts: {{ target_ip }}
+  hosts: all
   gather_facts: no
+  tasks:
+    - name: Adiciona host dinamicamente
+      add_host:
+        name: "{{ target_ip }}"
+        ansible_host: "{{ target_ip }}"
+        ansible_user: "{{ ssh_user }}"
+        ansible_connection: ssh
+        ansible_python_interpreter: /usr/bin/python3
+    - name: Executa tarefas no host adicionado
+      delegate_to: "{{ target_ip }}"
+      command: uptime
+
   
   tasks:
     - name: Verificar uso de CPU para o Host "{{ inventory_hostname }}" 
