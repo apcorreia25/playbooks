@@ -1,6 +1,6 @@
 ---
 - name: Playbook para healthcheck de uso de CPU e memória em Linux
-  hosts: 172.29.194.140
+  hosts: all
   gather_facts: no
   tasks:
     - name: Adiciona o host da VM
