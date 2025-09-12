@@ -1,7 +1,7 @@
 ---
 - name: Playbook para healthcheck de uso de CPU e memória em Linux
   hosts: localhost
-  gather_facts: no
+  gather_facts: true
   tasks:
     - name: Adiciona host com IP passado via variável
       add_host:
