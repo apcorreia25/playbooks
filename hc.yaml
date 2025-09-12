@@ -10,22 +10,27 @@
         ansible_user: "{{ ssh_user }}"
         ansible_connection: ssh
         ansible_python_interpreter: /usr/bin/python3
+    
+    - name: Descobre hostname remoto
+      command: hostname
+      register: hostname_result
+      delegate_to: "{{ target_ip }}
 
 - name: Executa healthcheck no host adicionado
   hosts: dynamic_host
   gather_facts: no  
   tasks:
-    - name: Verificar uso de CPU para o Host "{{ ansible_hostname }}" 
+    - name: Verificar uso de CPU para o Host "{{ hostname_result }}" 
       ansible.builtin.shell: |
         top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}'
       register: cpu_usage
 
-    - name: Verificar uso de memória para o Host "{{ ansible_hostname }}" 
+    - name: Verificar uso de memória para o Host "{{ hostname_result }}" 
       ansible.builtin.shell: |
         free | grep Mem | awk '{printf("%.2f", $3/$2 * 100.0)}'
       register: memory_usage
 
-    - name: Exibir uso de CPU e memória para o Host "{{ ansible_hostname }}"
+    - name: Exibir uso de CPU e memória para o Host "{{ hostname_result }}"
       debug:
         msg: "Servidor: {{ inventory_hostname }} | CPU: {{ cpu_usage.stdout }}% | Memória: {{ memory_usage.stdout }}%"
 
