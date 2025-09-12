@@ -1,6 +1,6 @@
 ---
 - name: Playbook para healthcheck de uso de CPU e memória em Linux
-  hosts: localhost
+  hosts: all
   gather_facts: no
   
   tasks:
