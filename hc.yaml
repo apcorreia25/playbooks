@@ -1,7 +1,15 @@
 ---
 - name: Playbook para healthcheck de uso de CPU e memória em Linux
-  hosts: all
+  hosts: localhost
   gather_facts: no
+  tasks:
+    - name: Adiciona o host da VM
+      add_host:
+        name: "{{ target_ip }}"
+        groups: vm_target
+        ansible_user: "{{ target_user }}"
+        ansible_connection: ssh
+
 
   tasks:
     - name: Verificar uso de CPU para o Host "{{ inventory_hostname }}" 
