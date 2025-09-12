@@ -1,9 +1,9 @@
 ---
-- name: Playbook para healthcheck de uso de CPU e memória em Linux
+- name: Criar inventário em tempo de execução
   hosts: localhost
   gather_facts: no
   tasks:
-    - name: Adiciona host com IP passado via variável
+    - name: Adicionar host ao inventário
       add_host:
         name: host
         ansible_host: "{{ target_ip }}"
@@ -11,7 +11,7 @@
         ansible_connection: ssh
         ansible_python_interpreter: /usr/bin/python3
         
-- name: Executa healthcheck no host adicionado
+- name: Playbook para healthcheck de uso de CPU e memória em Linux
   hosts: host
   gather_facts: true  
   tasks:
