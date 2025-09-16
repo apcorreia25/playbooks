@@ -6,7 +6,7 @@
     - name: Adicionar host ao inventário
       add_host:
         name: host
-        ansible_host: "{{ target_host }}"
+        ansible_host: "{{ host }}"
         ansible_user: "{{ ssh_user }}"
         ansible_connection: ssh
         ansible_python_interpreter: /usr/bin/python3
