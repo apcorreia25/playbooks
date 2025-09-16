@@ -7,7 +7,6 @@
       add_host:
         name: host
         ansible_host: "{{ host }}"
-        ansible_user: "{{ ssh_user }}"
         ansible_connection: ssh
         ansible_python_interpreter: /usr/bin/python3
         
