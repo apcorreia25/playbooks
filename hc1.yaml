@@ -1,0 +1,18 @@
+---        
+- name: Playbook para healthcheck de uso de CPU e memória em Linux
+  hosts: all
+  gather_facts: true  
+  tasks:
+    - name: Verificar uso de CPU no host {{ ansible_hostname|upper }}
+      ansible.builtin.shell: |
+        top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}'
+      register: cpu_usage
+
+    - name: Verificar uso de memória no host {{ ansible_hostname|upper }}
+      ansible.builtin.shell: |
+        free | grep Mem | awk '{printf("%.2f", $3/$2 * 100.0)}'
+      register: memory_usage
+
+    - name: Exibir uso de CPU e memória no host {{ ansible_hostname|upper }}
+      debug:
+        msg: "Servidor: {{ ansible_hostname|upper }} | CPU: {{ cpu_usage.stdout }}% | Memória: {{ memory_usage.stdout }}%"
