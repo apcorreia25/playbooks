@@ -25,7 +25,8 @@
       register: io_stats
 
     - name: Check top processes
-      command: ps aux --sort=-%mem | head -n 10
+      command: |
+            'ps aux --sort=-%mem | head -n 10'
       register: top_processes
 
     - name: Check system logs
