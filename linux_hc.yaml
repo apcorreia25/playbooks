@@ -1,0 +1,94 @@
+---
+- name: Linux Health Check
+  hosts: all
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: Check uptime
+      command: uptime
+      register: uptime_result
+
+    - name: Check CPU info
+      command: lscpu
+      register: cpu_info
+
+    - name: Check memory usage
+      command: free -m
+      register: memory_info
+
+    - name: Check disk usage
+      command: df -h
+      register: disk_usage
+
+    - name: Check I/O stats
+      command: iostat
+      register: io_stats
+
+    - name: Check top processes
+      command: ps aux --sort=-%mem | head -n 10
+      register: top_processes
+
+    - name: Check system logs
+      command: tail -n 50 /var/log/syslog
+      register: syslog_tail
+
+    - name: Check DNS resolution
+      command: dig google.com
+      register: dns_check
+
+    - name: Check network interfaces
+      command: ip a
+      register: net_interfaces
+
+    - name: Check routing table
+      command: ip route
+      register: routing_table
+
+    - name: Check open ports
+      command: ss -tuln
+      register: open_ports
+
+    - name: Check users logged in
+      command: who
+      register: logged_users
+
+    - name: Check failed login attempts
+      command: lastb | head -n 10
+      register: failed_logins
+
+    - name: Check cron jobs
+      command: crontab -l
+      register: cron_jobs
+
+    - name: Check kernel messages
+      command: dmesg | tail -n 50
+      register: kernel_logs
+
+    - name: Check services status
+      command: systemctl list-units --type=service --state=running
+      register: running_services
+
+    - name: Check package updates
+      command: apt list --upgradable
+      register: updates_available
+      when: ansible_os_family == "Debian"
+
+    - name: Print summary
+      debug:
+        msg: |
+          Uptime: {{ uptime_result.stdout }}
+          CPU Info: {{ cpu_info.stdout }}
+          Memory: {{ memory_info.stdout }}
+          Disk: {{ disk_usage.stdout }}
+          I/O: {{ io_stats.stdout }}
+          Top Processes: {{ top_processes.stdout }}
+          DNS: {{ dns_check.stdout }}
+          Interfaces: {{ net_interfaces.stdout }}
+          Routing: {{ routing_table.stdout }}
+          Ports: {{ open_ports.stdout }}
+          Users: {{ logged_users.stdout }}
+          Failed Logins: {{ failed_logins.stdout }}
+          Cron Jobs: {{ cron_jobs.stdout }}
+          Kernel Logs: {{ kernel_logs.stdout }}
+          Services: {{ running_services.stdout }}
+          Updates: {{ updates_available.stdout | default('N/A') }}
