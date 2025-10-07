@@ -1,8 +1,8 @@
 ---
 - name: Linux Health Check
   hosts: all
-  become: yes
   gather_facts: yes
+  
   tasks:
     - name: Check uptime
       command: uptime
