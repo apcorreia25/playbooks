@@ -64,7 +64,8 @@
       ignore_errors: yes
 
     - name: Check kernel messages
-      command: dmesg | tail -n 50
+      shell: |
+        dmesg | tail -n 50
       register: kernel_logs
 
     - name: Check services status
