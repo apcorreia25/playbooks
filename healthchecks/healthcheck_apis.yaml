@@ -9,7 +9,7 @@
   tasks:
 
     - name: Executar script Python
-      command: "bin/bash {{ script_path }}"
+      command: "/bin/bash {{ script_path }}"
       register: script_output
       ignore_errors: true
 
