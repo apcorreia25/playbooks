@@ -7,6 +7,15 @@
     script_path: "{{ playbook_dir }}/../scripts/healthcheck_apis.py"
   
   tasks:
+
+    - name: Mostrar diretório atual
+      command: pwd
+      register: current_dir
+
+    - name: Exibir caminho
+      debug:
+        msg: "{{ current_dir }}"
+
     - name: Executar script Python
       command: "python3 {{ script_path }}"
       register: script_output
