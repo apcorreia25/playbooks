@@ -4,7 +4,7 @@
   gather_facts: false
 
   vars:
-    script_path: "../scripts/healthcheck_apis.py"
+    script_path: "/runner/project/../scripts/healthcheck_apis.py"
   
   tasks:
 
