@@ -25,7 +25,7 @@
 
     - name: teste
       debug:
-        msg: "{{ ursl_status }}"
+        msg: "{{ url_status }}"
         
     - name: Send logs to Dynatrace
       uri:
