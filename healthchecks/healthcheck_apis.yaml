@@ -7,7 +7,7 @@
 
     - name: Copiar script para o host
       copy:
-        src: /playbook/scripts/healthcheck_apis.py
+        src: /playbooks/scripts/healthcheck_apis.py
         dest: /tmp/healthcheck_api.py
         mode: '0755'
 
