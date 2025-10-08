@@ -1,53 +1,17 @@
 ---
-- name: Check URLs and send status to Dynatrace
+- name: Healthcheck de URLs para o Dynatrace
   hosts: localhost
-  connection: local
-  gather_facts: true
-  
-  vars:
-    urls:
-      - https://www.google.com.br
+  gather_facts: false
 
-    dynatrace_log_api: "https://nev24035.apps.dynatrace.com.live.dynatrace.com/api/v2/logs/ingest"
-    dynatrace_token: ""
+  vars:
+    script_path: "/scripts/healthcheck_api.py"
 
   tasks:
-
-    - name: Check each URL
-      uri:
-        url: "{{ item }}"
-        method: GET
-        return_content: no
-        status_code: 200
-        validate_certs: no
-      register: url_status
-      loop: "{{ urls }}"
+    - name: Executar script Python
+      command: "python3 {{ script_path }}"
+      register: script_output
       ignore_errors: true
 
-    - name: teste
+    - name: Exibir saída do script
       debug:
-        msg: "{{ url_status }}"
-
-    
-    - name: Prepare log entries
-      set_fact:
-        dynatrace_logs: >-
-            {{
-              url_status.results | map('extract', {
-                'url': 'item',
-                'status': 'status',
-                'timestamp': '%Y-%m-%dT%H:%M:%SZ' | strftime(ansible_date_time.epoch | int)
-              }) | list
-              }}
-    
-        
-    - name: Send logs to Dynatrace
-      uri:
-        url: "{{ dynatrace_log_api }}"
-        method: POST
-        headers:
-          Authorization: "Api-Token {{ dynatrace_token }}"
-          Content-Type: "application/json"
-        body_format: json
-        body: "{{ dynatrace_logs }}"
-      delegate_to: localhost
+        var: script_output.stdout
