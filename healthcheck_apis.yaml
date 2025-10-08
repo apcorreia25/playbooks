@@ -2,7 +2,8 @@
 - name: Check URLs and send status to Dynatrace
   hosts: localhost
   connection: local
-  gather_facts: false
+  gather_facts: true
+  
   vars:
     urls:
       - https://www.google.com.br
