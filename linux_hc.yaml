@@ -79,7 +79,7 @@
 
     - name: Print summary
       debug:
-        msg: |
+        msg:
           Uptime: {{ uptime_result.stdout }}
           CPU Info: {{ cpu_info.stdout }}
           Memory: {{ memory_info.stdout }}
