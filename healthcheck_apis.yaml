@@ -35,7 +35,7 @@
             url_status.results | map('extract', {
               'url': 'item',
               'status': 'status',
-              'timestamp': 'invocation.module_args.start_time'
+              'timestamp': '%Y-%m-%dT%H:%M:%SZ' | strftime(ansible_date_time.epoch | int)
             }) | list
           }}
 
