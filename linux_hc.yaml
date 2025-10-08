@@ -80,19 +80,19 @@
     - name: Print summary
       debug:
         msg:
-          Uptime: {{ uptime_result.stdout }}
-          CPU Info: {{ cpu_info.stdout }}
-          Memory: {{ memory_info.stdout }}
-          Disk: {{ disk_usage.stdout }}
-          I/O: {{ io_stats.stdout }}
-          Top Processes: {{ top_processes.stdout }}
-          DNS: {{ dns_check.stdout }}
-          Interfaces: {{ net_interfaces.stdout }}
-          Routing: {{ routing_table.stdout }}
-          Ports: {{ open_ports.stdout }}
-          Users: {{ logged_users.stdout }}
-          Failed Logins: {{ failed_logins.stdout }}
-          Cron Jobs: {{ cron_jobs.stdout }}
-          Kernel Logs: {{ kernel_logs.stdout }}
-          Services: {{ running_services.stdout }}
-          Updates: {{ updates_available.stdout | default('N/A') }}
+          Uptime: "{{ uptime_result.stdout }}"
+          CPU Info: "{{ cpu_info.stdout }}"
+          Memory: "{{ memory_info.stdout }}"
+          Disk: "{{ disk_usage.stdout }}"
+          I/O: "{{ io_stats.stdout }}"
+          Top Processes: "{{ top_processes.stdout }}"
+          DNS: "{{ dns_check.stdout }}"
+          Interfaces: "{{ net_interfaces.stdout }}"
+          Routing: "{{ routing_table.stdout }}"
+          Ports: "{{ open_ports.stdout }}"
+          Users: "{{ logged_users.stdout }}"
+          Failed Logins: "{{ failed_logins.stdout }}"
+          Cron Jobs: "{{ cron_jobs.stdout }}"
+          Kernel Logs: "{{ kernel_logs.stdout }}"
+          Services: "{{ running_services.stdout }}"
+          Updates: "{{ updates_available.stdout | default('N/A') }}"
