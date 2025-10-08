@@ -22,17 +22,10 @@
       loop: "{{ urls }}"
       ignore_errors: true
 
-    - name: Prepare log entries
-      set_fact:
-        dynatrace_logs: >-
-          {{
-            url_status.results | map('extract', {
-              'url': 'item',
-              'status': 'status',
-              'timestamp': 'invocation.module_args.start_time'
-            }) | list
-          }}
-
+    - name: teste
+      debug:
+        msg: "{{ ursl_status }}"
+        
     - name: Send logs to Dynatrace
       uri:
         url: "{{ dynatrace_log_api }}"
