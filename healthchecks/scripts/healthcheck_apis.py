@@ -13,7 +13,7 @@ urls = [
 
 # Endpoint da API de logs do Dynatrace e token
 dynatrace_log_api="https://nev24035.live.dynatrace.com/api/v2/logs/ingest"
-dynatrace_token="dt0c01.CCP7LLWRZWENPQMGMKSJC2C5.WOODTVQ7I6JSPLVDIWQBFOPPQLN53EGAVNVQMMZGJCPSUTFEWKCTPIUUUHTX55EH"
+dynatrace_token=""
 
 
 # Cabeçalhos para autenticação
