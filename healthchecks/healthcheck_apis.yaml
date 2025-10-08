@@ -4,7 +4,7 @@
   gather_facts: false
 
   vars:
-  script_path: "{{ playbook_dir }}/scripts/healthcheck_apis.py"
+    script_path: "{{ playbook_dir }}/scripts/healthcheck_apis.py"
   
   tasks:
     - name: Executar script Python
