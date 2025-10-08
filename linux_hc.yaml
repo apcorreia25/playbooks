@@ -61,6 +61,7 @@
     - name: Check cron jobs
       command: crontab -l
       register: cron_jobs
+      ignore_errors: yes
 
     - name: Check kernel messages
       command: dmesg | tail -n 50
