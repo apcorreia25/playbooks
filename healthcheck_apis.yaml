@@ -5,7 +5,7 @@
   gather_facts: false
   vars:
     urls:
-      - https//:www.google.com.br
+      - https://www.google.com.br
 
     dynatrace_log_api: "https://nev24035.apps.dynatrace.com.live.dynatrace.com/api/v2/logs/ingest"
     dynatrace_token: ""
