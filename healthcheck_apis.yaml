@@ -26,6 +26,21 @@
     - name: teste
       debug:
         msg: "{{ url_status }}"
+
+    
+    - name: Prepare log entries
+      set_fact:
+        dynatrace_logs: >-
+          {{
+            url_status.results | map('extract', {
+              'url': 'item',
+              'status': 'status',
+              'timestamp': 'invocation.module_args.start_time'
+            }) | list
+          }}
+
+
+    
         
     - name: Send logs to Dynatrace
       uri:
