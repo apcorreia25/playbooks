@@ -3,16 +3,12 @@
   hosts: localhost
   gather_facts: false
 
+  vars:
+  script_path: "{{ playbook_dir }}/scripts/healthcheck_apis.py"
+  
   tasks:
-
-    - name: Copiar script para o host
-      copy:
-        src: /scripts/healthcheck_apis.py
-        dest: /tmp/healthcheck_api.py
-        mode: '0755'
-
     - name: Executar script Python
-      command: "python3 /tmp/healthcheck_apis.py"
+      command: "python3 {{ script_path }}"
       register: script_output
       ignore_errors: true
 
