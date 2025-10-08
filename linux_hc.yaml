@@ -1,6 +1,7 @@
 ---
 - name: Linux Health Check
   hosts: all
+  become: yes
   gather_facts: yes
   
   tasks:
