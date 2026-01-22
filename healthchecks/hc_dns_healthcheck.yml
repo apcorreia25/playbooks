@@ -17,7 +17,7 @@
       vars:
         url_item: "{{ item.0 }}"
         dns_item: "{{ item.1 }}"
-      command: "dig @{{ dns_item }} +short +stats +time={{ dns_timeout }} {{ url_item }}"
+      command: "dig @{{ dns_item }} +stats +time={{ dns_timeout }} {{ url_item }}"
       register: dig_out
       loop: "{{ urls | product(dns_servers) | list }}"
       loop_control:
