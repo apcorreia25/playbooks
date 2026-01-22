@@ -35,19 +35,7 @@
                 if (query_time_ms | int) <= (max_response_time_ms | int)
               else 'ALTA - ' ~ (query_time_ms | int | string) ~ ' ms'
                 ),
-          'DOMINIO_EXISTENTE': >-
-            {{
-              'N/A' if (
-                is_timeout
-                or ('SERVFAIL' in item.stdout)
-                or ('REFUSED' in item.stdout)
-                or ('status:' not in item.stdout)
-              )
-              else (
-                'NOK' if ('NXDOMAIN' in item.stdout)
-              else 'OK'
-              )
-            }},
+          'DOMINIO_EXISTENTE': 'NOK' if ('NXDOMAIN' in item.stdout)  else ('N/A' if ('status:' not in item.stdout)  else 'OK'),
           'RESOLVIDO_PARA': (
               (item.stdout | default(''))
               | regex_replace('^;.*$', '', multiline=True)
