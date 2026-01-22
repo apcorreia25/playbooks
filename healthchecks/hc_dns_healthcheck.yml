@@ -7,6 +7,7 @@
       - "bcb.gov.br"
       - "2tech-crefisa.s3.amazonaws.com"
       - "crefisa.com.br"
+      - "teste.fdsfds"
     dns_servers:
       - "8.8.8.8"
       - "1.1.1.1"
