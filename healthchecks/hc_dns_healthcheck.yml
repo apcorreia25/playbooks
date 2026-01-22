@@ -31,10 +31,18 @@
           'DNS_SERVER': item.item.1,
           'CONECTIVIDADE': 'OK' if (item.rc == 0 and not ('connection timed out' in item.stderr or 'no servers could be reached' in item.stderr)) else 'NOK',
           'TEMPO_DE_RESPOSTA': (
+              'N/A' if (
+                  ('connection timed out' in (item.stdout | lower)) or
+                  ('connection timed out' in (item.stderr | lower)) or
+                  ('no servers could be reached' in (item.stdout | lower)) or
+                  ('no servers could be reached' in (item.stderr | lower))
+                )  
+                  else (
               'NORMAL (' ~ (query_time_ms | int | string) ~ ' ms)'
-                if (query_time_ms | int) <= (max_response_time_ms | int)
-              else 'ALTA - ' ~ (query_time_ms | int | string) ~ ' ms'
-                ),
+                  if (query_time_ms | int) <= (max_response_time_ms | int)
+                else 'ALTA - ' ~ (query_time_ms | int | string) ~ ' ms'
+                )
+              ),
           'DOMINIO_EXISTENTE':
               'N/A' if (
                 (item.stdout | default('') | length == 0) or
