@@ -5,10 +5,8 @@
   vars:
     urls:
       - "bcb.gov.br"
-      - "teste.fdsfds"
     dns_servers:
       - "8.8.8.8"
-      - "172.53.53.53"
     dns_timeout: 3
     max_response_time_ms: 100
 
@@ -74,6 +72,7 @@
           {{
             resultado_dns | selectattr('CONECTIVIDADE', 'equalto', 'NOK') | list | length > 0
             or resultado_dns | selectattr('DOMINIO_EXISTENTE', 'equalto', 'NOK') | list | length > 0
+            or resultado_dns | selectattr('DOMINIO_EXISTENTE', 'equalto', 'N/A') | list | length > 0
             or resultado_dns | selectattr('TEMPO_DE_RESPOSTA', 'search', 'ALTA') | list | length > 0
           }}
 
