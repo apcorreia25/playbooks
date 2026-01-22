@@ -33,14 +33,19 @@
         resultado_dns: "{{ resultado_dns | default([]) + [ {
           'URL': item.item.0,
           'DNS_SERVER': item.item.1,
-          'DISPONIBILIDADE': 'OK' if (item.rc == 0 and not ('connection timed out' in item.stderr or 'no servers could be reached' in item.stderr)) else 'NOK',
+          'CONECTIVIDADE': 'OK' if (item.rc == 0 and not ('connection timed out' in item.stderr or 'no servers could be reached' in item.stderr)) else 'NOK',
           'TEMPO_DE_RESPOSTA': (
-            'NORMAL (' ~ (query_time_ms | int | string) ~ ' ms)'
-            if (query_time_ms | int) <= (max_response_time_ms | int)
-            else 'ALTA - ' ~ (query_time_ms | int | string) ~ ' ms'
-            ),
-          'Non-existent domain': 'NOK' if ('NXDOMAIN' in item.stdout or 'status: NXDOMAIN' in item.stdout) else 'OK',
-          'RESOLVIDO_PARA': (item.stdout | regex_findall('^(\\d+\\.\\d+\\.\\d+\\.\\d+)$', multiline=True) | join(', '))} ] }}"
+              'NORMAL (' ~ (query_time_ms | int | string) ~ ' ms)'
+                if (query_time_ms | int) <= (max_response_time_ms | int)
+              else 'ALTA - ' ~ (query_time_ms | int | string) ~ ' ms'
+                ),
+          'DOMINIO_EXISTENTE': 'NOK' if ('NXDOMAIN' in item.stdout or 'status: NXDOMAIN' in item.stdout) else 'OK',
+          'RESOLVIDO_PARA': (
+              (item.stdout | default(''))
+              | regex_replace('^;.*$', '', multiline=True)           # remove linhas que começam com ';'
+              | regex_findall('(?m)^(?:\\d{1,3}\\.){3}\\d{1,3}$')    # pega IPv4 por linha inteira
+              | join(', ')
+              )
       vars:
         query_time_line: "{{ item.stdout | regex_search(';; Query time: (\\d+) msec', '\\1') }}"
         query_time_ms: "{{ query_time_line[0] | default('0') if query_time_line else 0 }}"
