@@ -42,10 +42,9 @@
           'DOMINIO_EXISTENTE': 'NOK' if ('NXDOMAIN' in item.stdout or 'status: NXDOMAIN' in item.stdout) else 'OK',
           'RESOLVIDO_PARA': (
               (item.stdout | default(''))
-              | regex_replace('^;.*$', '', multiline=True)           # remove linhas que começam com ';'
-              | regex_findall('(?m)^(?:\\d{1,3}\\.){3}\\d{1,3}$')    # pega IPv4 por linha inteira
-              | join(', ')
-              ) ] }}"
+              | regex_replace('^;.*$', '', multiline=True)
+              | regex_findall('(?m)^(?:\\d{1,3}\\.){3}\\d{1,3}$')
+              | join(', ')) }] }}" 
       vars:
         query_time_line: "{{ item.stdout | regex_search(';; Query time: (\\d+) msec', '\\1') }}"
         query_time_ms: "{{ query_time_line[0] | default('0') if query_time_line else 0 }}"
