@@ -40,7 +40,7 @@
             else 'ALTA - ' ~ (query_time_ms | int | string) ~ ' ms'
             ),
           'Non-existent domain': 'NOK' if ('NXDOMAIN' in item.stdout or 'status: NXDOMAIN' in item.stdout) else 'OK',
-          'RESOLVIDO_PARA': (item.stdout | regex_findall('^(\\d+\\.\\d+\\.\\d+\\.\\d+)$', multiline=True) | join(', '))
+          'RESOLVIDO_PARA': (item.stdout | regex_findall('^(\\d+\\.\\d+\\.\\d+\\.\\d+)$', multiline=True) | join(', '))} ] }}"
       vars:
         query_time_line: "{{ item.stdout | regex_search(';; Query time: (\\d+) msec', '\\1') }}"
         query_time_ms: "{{ query_time_line[0] | default('0') if query_time_line else 0 }}"
