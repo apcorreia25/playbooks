@@ -36,9 +36,17 @@
               else 'ALTA - ' ~ (query_time_ms | int | string) ~ ' ms'
                 ),
           'DOMINIO_EXISTENTE':
-              'NOK' if ('status: NXDOMAIN' in item.stdout)
-              else ('N/A' if ('status:' not in item.stdout)
-              else 'OK'),
+              'N/A' if (
+                (item.stdout | default('') | length == 0) or
+                ('connection timed out' in (item.stdout | lower)) or
+                ('connection timed out' in (item.stderr | lower)) or
+                ('no servers could be reached' in (item.stdout | lower)) or
+                ('no servers could be reached' in (item.stderr | lower))
+              )
+                  else (
+              'NOK' if ('NXDOMAIN' in item.stdout)
+                  else 'OK'
+              ),
           'RESOLVIDO_PARA': (
               (item.stdout | default(''))
               | regex_replace('^;.*$', '', multiline=True)
