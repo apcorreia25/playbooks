@@ -16,7 +16,7 @@
 
   tasks:
     - name: Validar entradas
-    - ansible.builtin.assert:
+      ansible.builtin.assert:
         that:
           - urls | length > 0
           - dns_servers | length > 0
