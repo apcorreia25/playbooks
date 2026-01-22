@@ -50,10 +50,10 @@
           'RESOLVIDO_PARA': (
             (item.stdout | default(''))
               | split('\n')
-              | select('search', '\\sIN\\s+A\\s')                 # mantém linhas com " IN A "
-              | map('regex_search', '(\\S+)$', '\\1')             # pega a última coluna
-              | reject('equalto', None)                           # remove None se alguma linha não bater
-              | select('match', '^(?:\\d{1,3}\\.){3}\\d{1,3}$')   # garante IPv4
+              | select('search', '\\sIN\\s+A\\s')
+              | map('regex_search', '(\\S+)$', '\\1')
+              | reject('equalto', None) 
+              | select('match', '^(?:\\d{1,3}\\.){3}\\d{1,3}$')
               |  list
               | join(', ')
               ) }] }}"
