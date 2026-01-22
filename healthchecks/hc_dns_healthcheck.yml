@@ -1,0 +1,39 @@
+--- 
+- name: Playbook para healthcheck de DNS
+  hosts: localhost
+  gather_facts: false
+  vars:
+    urls:
+      - "bcb.gov.br"
+      - "2tech-crefisa.s3.amazonaws.com"
+      - "crefisa.com.br"
+    dns_servers:
+      - "8.8.8.8"
+      - "1.1.1.1"
+      - "208.67.222.222"
+    dns_timeout: 3
+    http_timeout: 5
+
+  tasks:
+    - name: Validar entradas
+    - ansible.builtin.assert:
+        that:
+          - urls | length > 0
+          - dns_servers | length > 0
+        fail_msg: "As listas 'urls' e 'dns_servers' não podem estar vazias."
+
+    - name: Inicializar estrutura de resultados
+      ansible.builtin.set_fact:
+        healthcheck_results: []
+
+    - name: "Executar resolução DNS para cada URL em cada DNS"
+      vars:
+        url_item: "{{ item.0 }}"
+        dns_item: "{{ item.1 }}"
+      ansible.builtin.command: "dig @{{ dns_item }} +short +time={{ dns_timeout }} {{ url_item }}"
+      register: dig_out
+      changed_when: false
+      failed_when: false
+      loop: "{{ urls | product(dns_servers) | list }}"
+      loop_control:
+        label: "{{ url_item }} @{{ dns_item }}"
