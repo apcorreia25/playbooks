@@ -60,6 +60,6 @@
     - name: Exibe resultado de healthcheck de DNS
       debug:
         msg: 
-          HEALTHCHECK: "{{ 'NOK' if not healthcheck_dns_status else 'OK' }}"
+          HEALTHCHECK: "{{ 'NOK' if healthcheck_dns_status else 'OK' }}"
           DIAGNÓSTICO:
             - DNS: "{{ resultado_dns}}" 
