@@ -49,8 +49,8 @@
               ),
           'RESOLVIDO_PARA': (
              (item.stdout | default(''))
-              | regex_findall('(?m)^\\S+\\s+(?:\\d+\\s+)?IN\\s+A\\s+(\\S+)$')   # captura a última coluna
-              | select('match', '^(?:\\d{1,3}\\.){3}\\d{1,3}$')                 # mantém só IPv4
+              | regex_findall('(?m)^\\S+\\s+(?:\\d+\\s+)?IN\\s+A\\s+(\\S+)$') 
+              | select('match', '^(?:\\d{1,3}\\.){3}\\d{1,3}$')
               | list
               | join(', ')) }] }}"
       vars:
