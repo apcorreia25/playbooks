@@ -52,7 +52,7 @@
       set_fact:
         healthcheck_dns_status: >-
           {{
-            resultado_dns | selectattr('DISPONIBILIDADE', 'equalto', 'NOK') | list | length > 0
+            resultado_dns | selectattr('CONECTIVIDADE', 'equalto', 'NOK') | list | length > 0
             or resultado_dns | selectattr('Non-existent domain', 'equalto', 'NOK') | list | length > 0
             or resultado_dns | selectattr('TEMPO_DE_RESPOSTA', 'search', 'ALTA') | list | length > 0
           }}
