@@ -12,8 +12,8 @@
       - "8.8.8.8"
       - "1.1.1.1"
       - "208.67.222.222"
+      - "172.53.53.53"
     dns_timeout: 3
-    http_timeout: 5
     max_response_time_ms: 100
 
   tasks:
@@ -21,12 +21,12 @@
       vars:
         url_item: "{{ item.0 }}"
         dns_item: "{{ item.1 }}"
-      ansible.builtin.command: "dig @{{ dns_item }} +time={{ dns_timeout }} {{ url_item }}"
+      command: "dig @{{ dns_item }} +time={{ dns_timeout }} {{ url_item }}"
       register: dig_out
-
       loop: "{{ urls | product(dns_servers) | list }}"
       loop_control:
         label: "{{ url_item }} @{{ dns_item }}"
+      ignore_errors: yes
 
     - name: Formata resultado
       set_fact:
@@ -41,7 +41,6 @@
             ),
           'Non-existent domain': 'NOK' if ('NXDOMAIN' in item.stdout or 'status: NXDOMAIN' in item.stdout) else 'OK',
           'RESOLVIDO_PARA': (item.stdout | regex_findall('^(\\d+\\.\\d+\\.\\d+\\.\\d+)$', multiline=True) | join(', ')),
-          'TEMPO_RAW_MS': query_time_ms  | int } ] }}"
       vars:
         query_time_line: "{{ item.stdout | regex_search(';; Query time: (\\d+) msec', '\\1') }}"
         query_time_ms: "{{ query_time_line[0] | default('0') if query_time_line else 0 }}"
