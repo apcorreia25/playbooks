@@ -39,10 +39,10 @@
                 )  
                   else (
               'NORMAL (' ~ (query_time_ms | int | string) ~ ' ms)'
-                  if (query_time_ms | int) <= (max_response_time_ms | int)
-                else 'ALTA - ' ~ (query_time_ms | int | string) ~ ' ms'
-                )
-              ),
+                    if (query_time_ms | int) <= (max_response_time_ms | int)
+                  else 'ALTA - ' ~ (query_time_ms | int | string) ~ ' ms'
+                  )
+                ),
           'DOMINIO_EXISTENTE':
               'N/A' if (
                 (item.stdout | default('') | length == 0) or
