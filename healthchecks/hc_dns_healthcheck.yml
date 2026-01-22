@@ -13,27 +13,54 @@
       - "208.67.222.222"
     dns_timeout: 3
     http_timeout: 5
+    max_response_time_ms: 100
 
   tasks:
-    - name: Validar entradas
-      ansible.builtin.assert:
-        that:
-          - urls | length > 0
-          - dns_servers | length > 0
-        fail_msg: "As listas 'urls' e 'dns_servers' não podem estar vazias."
-
-    - name: Inicializar estrutura de resultados
-      ansible.builtin.set_fact:
-        healthcheck_results: []
-
-    - name: "Executar resolução DNS para cada URL em cada DNS"
+    - name: "Executa resolução DNS para cada URL em cada DNS"
       vars:
         url_item: "{{ item.0 }}"
         dns_item: "{{ item.1 }}"
-      ansible.builtin.command: "dig @{{ dns_item }} +short +time={{ dns_timeout }} {{ url_item }}"
+      ansible.builtin.command: "dig @{{ dns_item }} +time={{ dns_timeout }} {{ url_item }}"
       register: dig_out
-      changed_when: false
-      failed_when: false
+
       loop: "{{ urls | product(dns_servers) | list }}"
       loop_control:
         label: "{{ url_item }} @{{ dns_item }}"
+
+    - name: Formata resultado
+      set_fact:
+        resultado_dns: "{{ resultado_dns | default([]) + [ {
+          'URL': item.item.0,
+          'DNS_SERVER': item.item.1,
+          'DISPONIBILIDADE': 'OK' if (item.rc == 0 and not ('connection timed out' in item.stderr or 'no servers could be reached' in item.stderr)) else 'NOK',
+          'TEMPO_DE_RESPOSTA': (
+            'NORMAL (' ~ (query_time_ms | string) ~ ' ms)'
+            if query_time_ms <= max_response_time_ms else
+            'ALTA - ' ~ (query_time_ms | string) ~ ' ms'
+          ),
+          'Non-existent domain': 'NOK' if ('NXDOMAIN' in item.stdout or 'status: NXDOMAIN' in item.stdout) else 'OK',
+          'RESOLVIDO_PARA': (item.stdout | regex_findall('^(\\d+\\.\\d+\\.\\d+\\.\\d+)$', multiline=True) | join(', ')),
+          'TEMPO_RAW_MS': query_time_ms
+        } ] }}"
+      vars:
+        query_time_line: "{{ item.stdout | regex_search(';; Query time: (\\d+) msec', '\\1') }}"
+        query_time_ms: "{{ query_time_line[0] | default('0') | int if query_time_line else 0 }}"
+      loop: "{{ dig_out.results }}"
+      loop_control:
+        label: "{{ item.item.0 }} @{{ item.item.1 }}"
+
+    - name: Avalia status geral do healthcheck de DNS
+      set_fact:
+        healthcheck_dns_status: >-
+          {{
+            resultado_dns | selectattr('DISPONIBILIDADE', 'equalto', 'NOK') | list | length > 0
+            or resultado_dns | selectattr('Non-existent domain', 'equalto', 'NOK') | list | length > 0
+            or resultado_dns | selectattr('TEMPO_DE_RESPOSTA', 'search', 'ALTA') | list | length > 0
+          }}
+
+    - name: Exibe resultado de healthcheck de DNS
+      debug:
+        msg: 
+          HEALTHCHECK: "{{ 'NOK' if not healthcheck_dns_status else 'OK' }}"
+          DIAGNÓSTICO:
+            - DNS: "{{ resultado_dns}}" 
